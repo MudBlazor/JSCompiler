@@ -6,13 +6,13 @@
   
   <UsingTask TaskName="MudBlazor.JSCompiler.CompileJS" AssemblyFile="$(JSCompilerTasksAssembly)" />
 
-  <Target Name="Compile JS" BeforeTargets="Build;BundleMinify">
+  <Target Name="Compile JS" BeforeTargets="BeforeBuild;BundleMinify">
     <CompileJS>
       <Output TaskParameter="GeneratedFile" ItemName="CompiledJSFile" />
     </CompileJS>
 
     <ItemGroup>
-      <None Remove="@(CompiledJSFiles)" />
+      <None Remove="@(CompiledJSFile)" />
 
       <!-- Fix to only include files that were newly generated as to not have duplicate Content items. -->
       <_NewCompiledJSFiles Include="@(CompiledJSFile)" Exclude="@(Content)" />
