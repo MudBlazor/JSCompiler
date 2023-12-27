@@ -1,0 +1,28 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <PackageId>MudBlazor.JSCompiler</PackageId>
+    <Version>1.0.0</Version>
+    <Authors>mikes-gh</Authors>
+    <Description>MudBlazor JS Compiler Library</Description>
+    <PackageDescription>MudBlazor JS Compiler Library</PackageDescription>
+    <PackageTags>js;blazor;</PackageTags>
+    <RepositoryUrl>https://github.com/MudBlazor/JSCompiler</RepositoryUrl>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <Title>MudBlazor.JSCompiler</Title>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <LangVersion>8.0</LangVersion>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Build.Framework" Version="16.4.0" PrivateAssets="All" />
+    <PackageReference Include="Microsoft.Build.Utilities.Core" Version="16.4.0" PrivateAssets="All" />
+  </ItemGroup>
+
+  <ItemGroup>
+      <None Include="build\*" Pack="true" PackagePath="build" />
+      <None Include="README.md" Pack="true" PackagePath=""/>
+  </ItemGroup>
+
+</Project>

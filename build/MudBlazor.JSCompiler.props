@@ -1,0 +1,5 @@
+﻿<Project>
+  <PropertyGroup>
+    <JSCompilerTasksAssembly Condition=" '$(JSCompilerTasksAssembly)' == '' ">$(MSBuildThisFileDirectory)..\lib\netstandard2.0\MudBlazor.JSCompiler.dll</JSCompilerTasksAssembly>
+  </PropertyGroup>
+</Project>
