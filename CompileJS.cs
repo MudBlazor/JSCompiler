@@ -17,13 +17,11 @@ namespace MudBlazor.JSCompiler
         {
             File.Delete(DestinationFile);
             var sourceDirectory = new DirectoryInfo(SourceDirectory);
-            Log.LogMessage(MessageImportance.High, sourceDirectory.FullName);
             var files = sourceDirectory.GetFiles("*.js");
 
             foreach (var file in files)
             {
                 var fileText = File.ReadAllText(file.FullName);
-                Log.LogMessage(MessageImportance.High, file.Name);
                 File.AppendAllText(DestinationFile, fileText);
             }
 
@@ -34,7 +32,6 @@ namespace MudBlazor.JSCompiler
                 File.WriteAllText(DestinationFile, writer.GetStringBuilder().ToString(), reader.CurrentEncoding);
             }
 
-            Log.LogMessage(MessageImportance.High, "CompileJS Complete");
             GeneratedFile = new TaskItem(DestinationFile);
             return true;
         }
