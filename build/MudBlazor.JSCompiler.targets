@@ -1,5 +1,9 @@
 ﻿<Project>
-
+  
   <UsingTask TaskName="MudBlazor.JSCompiler.CompileJS" AssemblyFile="$(JSCompilerTasksAssembly)" />
+
+  <Target Name="Compile JS">
+    <CompileJS/>
+  </Target>
 
 </Project>
