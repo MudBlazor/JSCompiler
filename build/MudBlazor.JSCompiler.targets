@@ -1,23 +1,5 @@
 ﻿<Project>
 
-  <ItemGroup>
-    <UpToDateCheckInput Include="**/*.js" />
-  </ItemGroup>
-  
   <UsingTask TaskName="MudBlazor.JSCompiler.CompileJS" AssemblyFile="$(JSCompilerTasksAssembly)" />
-
-  <Target Name="Compile JS" BeforeTargets="ResolveStaticWebAssetsInputs">
-    <CompileJS>
-      <Output TaskParameter="GeneratedFile" ItemName="CompiledJSFile" />
-    </CompileJS>
-
-    <ItemGroup>
-      <None Remove="@(CompiledJSFile)" />
-
-      <!-- Fix to only include files that were newly generated as to not have duplicate Content items. -->
-      <_NewCompiledJSFiles Include="@(CompiledJSFile)" Exclude="@(Content)" />
-      <Content Include="@(_NewCompiledJSFile)" />
-    </ItemGroup>
-  </Target>
 
 </Project>
