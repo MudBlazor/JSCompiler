@@ -1,4 +1,6 @@
+using System;
 using System.IO;
+using System.Text;
 using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
 
@@ -15,21 +17,36 @@ namespace MudBlazor.JSCompiler
 
         public override bool Execute()
         {
-            File.Delete(DestinationFile);
             var sourceDirectory = new DirectoryInfo(SourceDirectory);
-            var files = sourceDirectory.GetFiles("*.js");
+            var sourceFiles = sourceDirectory.GetFiles("*.js");
+            var maxSourceWriteTime = new DateTime();
+            var combinedJS = new StringBuilder();
 
-            foreach (var file in files)
+            foreach (var sourceFile in sourceFiles)
             {
-                var fileText = File.ReadAllText(file.FullName);
-                File.AppendAllText(DestinationFile, fileText);
+                maxSourceWriteTime = sourceFile.LastWriteTime > maxSourceWriteTime ? sourceFile.LastWriteTime : maxSourceWriteTime;
+                var fileText = File.ReadAllText(sourceFile.FullName);
+                combinedJS.Append(fileText);
             }
 
-            using (var reader = new StreamReader(DestinationFile))
+            var compressedJS = JavaScriptCompressor.Compress(combinedJS.ToString());
+
+            if (File.Exists(DestinationFile))
             {
-                var writer = new StringWriter();
-                JavaScriptCompressor.Compress(reader, writer);
-                File.WriteAllText(DestinationFile, writer.GetStringBuilder().ToString(), reader.CurrentEncoding);
+                if (File.GetLastWriteTime(DestinationFile) < maxSourceWriteTime)
+                {
+                    File.WriteAllText(DestinationFile, compressedJS);
+                    Log.LogMessage(MessageImportance.High, $"{DestinationFile} Updated");
+                }
+                else
+                {
+                    Log.LogMessage(MessageImportance.High, $"{DestinationFile} UpToDate");
+                }
+            }
+            else
+            {
+                File.WriteAllText(DestinationFile, compressedJS);
+                Log.LogMessage(MessageImportance.High, $"{DestinationFile} Created");
             }
 
             GeneratedFile = new TaskItem(DestinationFile);
