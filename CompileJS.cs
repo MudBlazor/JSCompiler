@@ -26,7 +26,7 @@ namespace MudBlazor.JSCompiler
                 maxSourceWriteTime = sourceFile.LastWriteTime > maxSourceWriteTime ? sourceFile.LastWriteTime : maxSourceWriteTime;
             }
 
-            using (Mutex mutex = new Mutex(false, DestinationFile))
+            using (Mutex mutex = new Mutex(false, "MudBlazorminjs"))
             {
                 mutex.WaitOne(5000);
 
