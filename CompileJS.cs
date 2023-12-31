@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using System.Text;
+using System.Threading;
 using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
 
@@ -17,40 +18,54 @@ namespace MudBlazor.JSCompiler
 
         public override bool Execute()
         {
-            var sourceDirectory = new DirectoryInfo(SourceDirectory);
-            var sourceFiles = sourceDirectory.GetFiles("*.js");
+            var sourceFiles = new DirectoryInfo(SourceDirectory).GetFiles("*.js");
             var maxSourceWriteTime = new DateTime();
-            var combinedJS = new StringBuilder();
 
             foreach (var sourceFile in sourceFiles)
             {
                 maxSourceWriteTime = sourceFile.LastWriteTime > maxSourceWriteTime ? sourceFile.LastWriteTime : maxSourceWriteTime;
-                var fileText = File.ReadAllText(sourceFile.FullName);
-                combinedJS.Append(fileText);
             }
 
-            var compressedJS = JavaScriptCompressor.Compress(combinedJS.ToString());
-
-            if (File.Exists(DestinationFile))
+            using (Mutex mutex = new Mutex(false, DestinationFile))
             {
-                if (File.GetLastWriteTime(DestinationFile) < maxSourceWriteTime)
+                mutex.WaitOne(5000);
+
+                if (File.Exists(DestinationFile))
                 {
-                    File.WriteAllText(DestinationFile, compressedJS);
-                    Log.LogMessage(MessageImportance.High, $"{DestinationFile} Updated");
+                    if (File.GetLastWriteTime(DestinationFile) < maxSourceWriteTime)
+                    {
+                        WriteFile();
+                        Log.LogMessage(MessageImportance.High, $"{DestinationFile} Updated");
+                    }
+                    else
+                    {
+                        Log.LogMessage(MessageImportance.High, $"{DestinationFile} UpToDate");
+                    }
                 }
                 else
                 {
-                    Log.LogMessage(MessageImportance.High, $"{DestinationFile} UpToDate");
+                    WriteFile();
+                    Log.LogMessage(MessageImportance.High, $"{DestinationFile} Created");
                 }
-            }
-            else
-            {
-                File.WriteAllText(DestinationFile, compressedJS);
-                Log.LogMessage(MessageImportance.High, $"{DestinationFile} Created");
+
+                mutex.ReleaseMutex();
             }
 
             GeneratedFile = new TaskItem(DestinationFile);
             return true;
+        }
+
+        private void WriteFile()
+        {
+            var sourceFiles = new DirectoryInfo(SourceDirectory).GetFiles("*.js");
+            var combinedJS = new StringBuilder();
+            foreach (var sourceFile in sourceFiles)
+            {
+                var fileText = File.ReadAllText(sourceFile.FullName);
+                combinedJS.Append(fileText);
+            }
+            var compressedJS = JavaScriptCompressor.Compress(combinedJS.ToString());
+            File.WriteAllText(DestinationFile, compressedJS);
         }
     }
 }
