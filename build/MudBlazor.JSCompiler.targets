@@ -6,14 +6,14 @@
     <CompileJS>
       <Output TaskParameter="GeneratedFile" ItemName="CompiledJsFile" />
     </CompileJS>
+
+    <ItemGroup>
+      <None Remove="@(CompiledJsFile)" />
+
+      <!-- Fix to only include files that were newly generated as to not have duplicate Content items. -->
+      <_NewCompiledJsFile Include="@(CompiledJsFile)" Exclude="@(Content)" />
+      <Content Include="@(_NewCompiledJsFile)" />
+    </ItemGroup>
   </Target>
-
-  <ItemGroup>
-    <None Remove="@(CompiledJsFile)" />
-
-    <!-- Fix to only include files that were newly generated as to not have duplicate Content items. -->
-    <_NewCompiledJsFile Include="@(CompiledJsFile)" Exclude="@(Content)" />
-    <Content Include="@(_NewCompiledJsFile)" />
-  </ItemGroup>
 
 </Project>
