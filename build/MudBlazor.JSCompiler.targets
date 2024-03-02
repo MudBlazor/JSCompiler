@@ -2,7 +2,7 @@
   
   <UsingTask TaskName="MudBlazor.JSCompiler.CompileJS" AssemblyFile="$(JSCompilerTasksAssembly)" />
 
-  <Target Name="Compile JS" BeforeTargets="Build;ResolveScopedCssInputs;BundleMinify">
+  <Target Name="Compile JS" BeforeTargets="Build;ResolveScopedCssInputs;BundleMinify;ResolveProjectStaticWebAssets">
     <CompileJS>
       <Output TaskParameter="GeneratedFile" ItemName="CompiledJsFile" />
     </CompileJS>
