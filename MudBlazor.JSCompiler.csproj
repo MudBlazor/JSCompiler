@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <PackageId>MudBlazor.JSCompiler</PackageId>
-    <Version>1.0.15</Version>
+    <Version>1.0.16</Version>
     <Authors>mikes-gh</Authors>
     <Description>MudBlazor JS Compiler Library</Description>
     <PackageDescription>MudBlazor JS Compiler Library</PackageDescription>
