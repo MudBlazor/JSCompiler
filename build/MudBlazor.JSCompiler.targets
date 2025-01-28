@@ -1,4 +1,8 @@
 ﻿<Project>
+
+  <ItemGroup>
+    <UpToDateCheckInput Include="**/*.js" />
+  </ItemGroup>
   
   <UsingTask TaskName="MudBlazor.JSCompiler.CompileJS" AssemblyFile="$(JSCompilerTasksAssembly)" />
 
